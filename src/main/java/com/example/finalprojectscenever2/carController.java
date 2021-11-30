@@ -1,58 +1,11 @@
-/*
-package com.example.finalprojectscenever2.controller;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import com.example.finalprojectscenever2.model.FileSource;
-import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-
-public class carController {
-
-    //@FXML
-    //private ComboBox<String> cmbDisplay;
-
-    @FXML
-    private ComboBox<String> cmbFilter;
-/*
-    @FXML
-    private TableView<Maint> tableMaint;
-    public List<Maint> listMaint;
-
-
-
-
-
-    @FXML
-    private TextField addDescription;
-
-    @FXML
-    private TableView<?> tableDetails;
-
-    @FXML
-    private Label totalAmount;
-
-    @FXML
-    ComboBox mainDisplay;
-
-    @FXML
-    private void initialize () {
-        mainDisplay.setValue("Status");
-    //    mainDisplay.setItems(displayOptions);
-    }
-
-}
-
- */
 package com.example.finalprojectscenever2;
 
-import com.example.finalprojectscenever2.view.tableData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -60,67 +13,156 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ResourceBundle;
 
-public class carController {
+public class carController implements Initializable {
+
 
     @FXML
-    private TextField addDescription1;
+    private TextField addExpenseAmount;
 
     @FXML
-    private TextField addDescription11;
+    private DatePicker addExpenseDate;
 
     @FXML
-    private TextField addDescription111;
+    private TextField addExpenseDescription;
 
     @FXML
-    private TextField addDescription12;
+    private TextField addLoanAmount;
 
     @FXML
-    private TextField addDescription121;
+    private Button addLoanButton;
 
     @FXML
-    private TableView<tableData> status;
-    @FXML private TableColumn<tableData, String> dateColumn;
-    @FXML private TableColumn<tableData, String> descriptionColumn;
-    @FXML private TableColumn<tableData, String> costColumn;
+    private DatePicker addLoanDate;
 
     @FXML
-    private TableView<?> tableDetails11;
+    private TextField addLoanDescription;
 
     @FXML
-    private TableView<?> tableDetails111;
+    private TextField addMaintAmount;
 
     @FXML
-    private TableView<?> tableDetails12;
+    private Button addMaintButton;
 
     @FXML
-    private TableView<?> tableDetails121;
+    private DatePicker addMaintDate;
 
     @FXML
-    private Label totalAmount1;
+    private TextField addMaintDescription;
 
     @FXML
-    private Label totalAmount11;
+    private DatePicker addModDate;
 
     @FXML
-    private Label totalAmount111;
+    private TextField addModDescription;
 
     @FXML
-    private Label totalAmount12;
+    private Button expenseAddButton;
 
     @FXML
-    private Label totalAmount121;
+    private TableColumn<?, ?> expenseCost;
 
+    @FXML
+    private TableColumn<?, ?> expenseDate;
+
+    @FXML
+    private TableColumn<?, ?> expenseDescription;
+
+    @FXML
+    private Button expenseRemoveButton;
+
+    @FXML
+    private TableView<?> expenseTable;
+
+    @FXML
+    private TableColumn<?, ?> loanCost;
+
+    @FXML
+    private TableColumn<?, ?> loanDate;
+
+    @FXML
+    private TableColumn<?, ?> loanDescription;
+
+    @FXML
+    private TableView<?> loanTable;
+
+    @FXML
+    private TableColumn<tableData, Double> maintCost;
+
+    @FXML
+    private TableColumn<tableData, LocalDate> maintDate;
+
+    @FXML
+    private TableColumn<tableData, String> maintDescription;
+
+    @FXML
+    private TableView<tableData> maintTable;
+
+    @FXML
+    private TableColumn<?, ?> modCost;
+
+    @FXML
+    private TableColumn<?, ?> modDate;
+
+    @FXML
+    private TableColumn<?, ?> modDescription;
+
+    @FXML
+    private TableView<?> modTable;
+
+    @FXML
+    private Button removeLoanButton;
+
+    @FXML
+    private Button removeMaintButton;
+
+    @FXML
+    private Button removeModButton;
+
+    @FXML
+    private TableColumn<?, ?> sColumn;
+
+    @FXML
+    private TableColumn<?, ?> sCost;
+
+    @FXML
+    private TableColumn<?, ?> sDescription;
+
+    @FXML
+    private Label sTotalAmount;
+
+    @FXML
+    private Button statusRemoveButton;
+
+    @FXML
+    private TableView<?> statusTable;
+
+    @FXML
+    private Label totalExpenseAmount;
+
+    @FXML
+    private Label totalLoanAmount;
+
+    @FXML
+    private Label totalMaintAmount;
+
+    @FXML
+    private Label totalModAmount;
 
     public void addButtonClick() {
         System.out.println("add Button clicked");
     }
 
-    private void initialize(URL url, ResourceBundle rb) {
-        dateColumn.setCellValueFactory(new PropertyValueFactory<tableData, String>("dateColumn"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<tableData, String>("descriptionColumn"));
-        costColumn.setCellValueFactory(new PropertyValueFactory<tableData, String>("costColumn"));
+    public void initialize(URL url, ResourceBundle rb) {
+        maintDate.setCellValueFactory(new PropertyValueFactory<tableData, LocalDate>("date"));
+        maintDescription.setCellValueFactory(new PropertyValueFactory<tableData, String>("description"));
+        maintCost.setCellValueFactory(new PropertyValueFactory<tableData, Double>("cost"));
+
+        //dummy data
+        maintTable.setItems(getTableData());
         /*
         TableView<tableData> table;
             //Date column
@@ -142,19 +184,20 @@ public class carController {
             table = new TableView<>();
             table.setItems(viewTable());
             table.getColumns().addAll(dateColumn, descriptionColumn, costColumn);
-
-        }
 */
-        public ObservableList<tableData> tableData {
-            ObservableList<tableData> tableList = FXCollections.observableArrayList();
-            //loop database underneath
-            tableList.add(new tableData("12/2/1022", "something1", 10.95)); //date, description, price
-            tableList.add(new tableData("12/3/1022", "something2", 10.96));
-            tableList.add(new tableData("12/4/1022", "something3", 10.97));
-            return tableList;
+    }
 
-        }
-
+    public ObservableList<tableData> getTableData() {
+        ObservableList<tableData> randomData = FXCollections.observableArrayList();
+        //loop database underneath
+        randomData.add(new tableData(LocalDate.of(2017, Month.DECEMBER, 23), "something1", 10.95)); //date, description, price
+        randomData.add(new tableData(LocalDate.of(2017, Month.DECEMBER, 24), "something2", 10.96));
+        randomData.add(new tableData(LocalDate.of(2017, Month.DECEMBER, 25), "something3", 10.97));
+        return randomData;
 
     }
+
+
+}
+
 
