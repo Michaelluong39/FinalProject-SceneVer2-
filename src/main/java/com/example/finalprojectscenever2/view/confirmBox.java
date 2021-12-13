@@ -18,6 +18,7 @@ public class confirmBox {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(150);
+        window.setMinHeight(150);
         Label label = new Label();
         label.setText(message);
 
