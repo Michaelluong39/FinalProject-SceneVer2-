@@ -1,13 +1,8 @@
 package com.example.finalprojectscenever2;
 
-import com.example.finalprojectscenever2.FileSource;
-import com.example.finalprojectscenever2.model.tableExpenseData;
-import com.example.finalprojectscenever2.model.tableLoanData;
-import com.example.finalprojectscenever2.model.tableMaintData;
-import com.example.finalprojectscenever2.model.tableModData;
+import com.example.finalprojectscenever2.model.*;
 import com.example.finalprojectscenever2.view.confirmBox;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,12 +14,10 @@ import javafx.stage.Modality;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 
@@ -57,20 +50,20 @@ public class carController implements Initializable {
     @FXML private Button expenseRemoveButton;
     @FXML private TableView<tableExpenseData> expenseTable;
     @FXML private Menu fileMenu;
-    @FXML private TableColumn<tableLoanData, Double> loanCost;
-    @FXML private TableColumn<tableLoanData, LocalDate> loanDate;
-    @FXML private TableColumn<tableLoanData, String> loanDescription;
-    @FXML private TableView<tableLoanData> loanTable;
-    @FXML private TableColumn<tableMaintData, Double> maintCost;
-    @FXML private TableColumn<tableMaintData, LocalDate> maintDate;
-    @FXML private TableColumn<tableMaintData, String> maintDescription;
-    @FXML private TableView<tableMaintData> maintTable;
+    @FXML private TableColumn<tableExpenseData, Double> loanCost;
+    @FXML private TableColumn<tableExpenseData, LocalDate> loanDate;
+    @FXML private TableColumn<tableExpenseData, String> loanDescription;
+    @FXML private TableView<tableExpenseData> loanTable;
+    @FXML private TableColumn<tableExpenseData, Double> maintCost;
+    @FXML private TableColumn<tableExpenseData, LocalDate> maintDate;
+    @FXML private TableColumn<tableExpenseData, String> maintDescription;
+    @FXML private TableView<tableExpenseData> maintTable;
     @FXML private MenuItem menuClose;
     @FXML private MenuItem menuSave;
-    @FXML private TableColumn<tableModData, Double> modCost;
-    @FXML private TableColumn<tableModData, LocalDate> modDate;
-    @FXML private TableColumn<tableModData, String> modDescription;
-    @FXML private TableView<tableModData> modTable;
+    @FXML private TableColumn<tableExpenseData, Double> modCost;
+    @FXML private TableColumn<tableExpenseData, LocalDate> modDate;
+    @FXML private TableColumn<tableExpenseData, String> modDescription;
+    @FXML private TableView<tableExpenseData> modTable;
     @FXML private Button removeLoanButton;
     @FXML private Button removeMaintButton;
     @FXML private Button removeModButton;
@@ -108,21 +101,21 @@ public class carController implements Initializable {
 
         //dummy data
         try {
-            expenseTable.setItems(getExpenseTableData());
+            expenseTable.setItems(FileSource.getTableData("Expense.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //total expense amount set to display
-        totalExpenseAmount.setText(getExpenseSum(expenseCost));
+        totalExpenseAmount.setText(FileSource.getSum(expenseTable));
 
 
         //
         //Maintenance data
         //
-        maintDate.setCellValueFactory(new PropertyValueFactory<tableMaintData, LocalDate>("date"));
-        maintDescription.setCellValueFactory(new PropertyValueFactory<tableMaintData, String>("description"));
-        maintCost.setCellValueFactory(new PropertyValueFactory<tableMaintData, Double>("cost"));
+        maintDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
+        maintDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
+        maintCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
 
         //Use for button removal for maintenance table
         maintTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -133,20 +126,20 @@ public class carController implements Initializable {
 
         //dummy data
         try {
-            maintTable.setItems(getMaintTableData());
+            maintTable.setItems(FileSource.getTableData("Maintenance.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //total maintenance amount set to display
-        totalMaintAmount.setText(getMaintSum(maintCost));
+        totalMaintAmount.setText(FileSource.getSum(maintTable));
 
         //
         //Mod Data
         //
-        modDate.setCellValueFactory(new PropertyValueFactory<tableModData, LocalDate>("date"));
-        modDescription.setCellValueFactory(new PropertyValueFactory<tableModData, String>("description"));
-        modCost.setCellValueFactory(new PropertyValueFactory<tableModData, Double>("cost"));
+        modDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
+        modDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
+        modCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
 
         //Use for button removal for maintenance table
         modTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -157,20 +150,20 @@ public class carController implements Initializable {
 
         //dummy data
         try {
-            modTable.setItems(getModTableData());
+            modTable.setItems(FileSource.getTableData("Mods.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //total mod amount set to display
-        totalModAmount.setText(getModSum(modCost));
+        totalModAmount.setText(FileSource.getSum(modTable));
 
         //
         //Loan Data
         //
-        loanDate.setCellValueFactory(new PropertyValueFactory<tableLoanData, LocalDate>("date"));
-        loanDescription.setCellValueFactory(new PropertyValueFactory<tableLoanData, String>("description"));
-        loanCost.setCellValueFactory(new PropertyValueFactory<tableLoanData, Double>("cost"));
+        loanDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
+        loanDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
+        loanCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
 
         //Use for button removal for maintenance table
         loanTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -181,24 +174,24 @@ public class carController implements Initializable {
 
         //dummy data
         try {
-            loanTable.setItems(getLoanTableData());
+            loanTable.setItems(FileSource.getTableData("Loan.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //total loan amount set to display
-        totalLoanAmount.setText(getLoanSum(loanCost));
+        totalLoanAmount.setText(FileSource.getSum(loanTable));
 
         //
         //Status Data
         //
 
-        statusTotalSpent.setText(String.valueOf(df.format(Double.parseDouble(getExpenseSum(expenseCost)) +
-                                                Double.parseDouble(getMaintSum(maintCost)) +
-                                                Double.parseDouble(getLoanSum(loanCost)))));
-        statusExpenseAmount.setText(getExpenseSum(expenseCost));
-        statusMaintAmount.setText(getMaintSum(maintCost));
-        statusLoanAmount.setText(getLoanSum(loanCost));
+        statusTotalSpent.setText(String.valueOf(df.format(Double.parseDouble(FileSource.getSum(expenseTable)) +
+                                                            Double.parseDouble(FileSource.getSum(maintTable)) +
+                                                            Double.parseDouble(FileSource.getSum(loanTable)))));
+        statusExpenseAmount.setText(FileSource.getSum(expenseTable));
+        statusMaintAmount.setText(FileSource.getSum(maintTable));
+        statusLoanAmount.setText(FileSource.getSum(loanTable));
 
     }
 
@@ -254,12 +247,12 @@ public class carController implements Initializable {
     public void deleteMaintButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
         if(x == true) {
-            ObservableList<tableMaintData> selectedRows, allItems;
+            ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = maintTable.getItems();
 
             selectedRows = maintTable.getSelectionModel().getSelectedItems();
 
-            for (tableMaintData items : selectedRows) {
+            for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
         }else{}
@@ -269,12 +262,12 @@ public class carController implements Initializable {
     public void deleteModButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
         if(x == true) {
-            ObservableList<tableModData> selectedRows, allItems;
+            ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = modTable.getItems();
 
             selectedRows = modTable.getSelectionModel().getSelectedItems();
 
-            for (tableModData items : selectedRows) {
+            for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
         }else{}
@@ -283,12 +276,12 @@ public class carController implements Initializable {
     public void deleteLoanButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
         if(x == true) {
-            ObservableList<tableLoanData> selectedRows, allItems;
+            ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = loanTable.getItems();
 
             selectedRows = loanTable.getSelectionModel().getSelectedItems();
 
-            for (tableLoanData items : selectedRows) {
+            for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
         }else{}
@@ -311,7 +304,7 @@ public class carController implements Initializable {
     public void addMaintButtonClick() {
         double parseCost;
         parseCost = Double.parseDouble(addMaintAmount.getText()); //convert TextField into Double
-        tableMaintData newData = new tableMaintData(
+        tableExpenseData newData = new tableExpenseData(
                 addMaintDate.getValue(),
                 addMaintDescription.getText(),
                 parseCost
@@ -322,7 +315,7 @@ public class carController implements Initializable {
     public void addModButtonClick() {
         double parseCost;
         parseCost = Double.parseDouble(addModAmount.getText()); //convert TextField into Double
-        tableModData newData = new tableModData(
+        tableExpenseData newData = new tableExpenseData(
                 addModDate.getValue(),
                 addModDescription.getText(),
                 parseCost
@@ -333,7 +326,7 @@ public class carController implements Initializable {
     public void addLoanButtonClick() {
         double parseCost;
         parseCost = Double.parseDouble(addLoanAmount.getText()); //convert TextField into Double
-        tableLoanData newData = new tableLoanData(
+        tableExpenseData newData = new tableExpenseData(
                 addLoanDate.getValue(),
                 addLoanDescription.getText(),
                 parseCost
@@ -345,129 +338,17 @@ public class carController implements Initializable {
     // edit table data module
     //
     public void editDescriptionCell(TableColumn.CellEditEvent editedCell) {
-        tableMaintData maintSelect = maintTable.getSelectionModel().getSelectedItem();
+        tableExpenseData maintSelect = maintTable.getSelectionModel().getSelectedItem();
         maintSelect.setDescription(editedCell.getNewValue().toString());
 
-        tableLoanData loanSelect = loanTable.getSelectionModel().getSelectedItem();
+        tableExpenseData loanSelect = loanTable.getSelectionModel().getSelectedItem();
         loanSelect.setDescription(editedCell.getNewValue().toString());
 
-        tableModData modSelect = modTable.getSelectionModel().getSelectedItem();
+        tableExpenseData modSelect = modTable.getSelectionModel().getSelectedItem();
         modSelect.setDescription(editedCell.getNewValue().toString());
 
         tableExpenseData expenseSelect = expenseTable.getSelectionModel().getSelectedItem();
         expenseSelect.setDescription(editedCell.getNewValue().toString());
-    }
-
-
-    //
-    //add data to tables
-    //
-    public ObservableList<tableExpenseData> getExpenseTableData() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader( new File(dirString, "Expense.txt")));
-        String line;
-        String[] array;
-        ObservableList<tableExpenseData> randomData = FXCollections.observableArrayList();
-
-        //loop read data from file
-        while((line = br.readLine()) != null){
-            array = line.split(";");
-            randomData.add(new tableExpenseData(LocalDate.parse(array[0]), array[1], Double.parseDouble(array[2])));
-        }
-        //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 23), "expense1", 1.33)); //date, description, price
-        //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 24), "expense2", 1.24));
-        //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 25), "expense3", 1.56));
-        return randomData;
-    }
-
-    public ObservableList<tableMaintData> getMaintTableData() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader( new File(dirString, "Maintenance.txt")));
-        String line;
-        String[] array;
-        ObservableList<tableMaintData> randomData = FXCollections.observableArrayList();
-
-        //loop data read from file
-        while((line = br.readLine()) != null){
-            array = line.split(";");
-            randomData.add(new tableMaintData(LocalDate.parse(array[0]), array[1], Double.parseDouble(array[2])));
-        }
-        //randomData.add(new tableMaintData(LocalDate.of(2017, Month.DECEMBER, 23), "Maint1", 2.36)); //date, description, price
-        //randomData.add(new tableMaintData(LocalDate.of(2017, Month.DECEMBER, 24), "Maint2", 2.63));
-        //randomData.add(new tableMaintData(LocalDate.of(2017, Month.DECEMBER, 25), "Maint3", 2.65));
-        return randomData;
-    }
-
-    public ObservableList<tableModData> getModTableData() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader( new File(dirString, "Mods.txt")));
-        String line;
-        String[] array;
-        ObservableList<tableModData> randomData = FXCollections.observableArrayList();
-
-        //loop data read from file
-        while((line = br.readLine()) != null){
-            array = line.split(";");
-            randomData.add(new tableModData(LocalDate.parse(array[0]), array[1], Double.parseDouble(array[2])));
-        }
-        //randomData.add(new tableModData(LocalDate.of(2017, Month.DECEMBER, 23), "Mod1", 3.63)); //date, description, price
-        //randomData.add(new tableModData(LocalDate.of(2017, Month.DECEMBER, 24), "MOd2", 3.56));
-        //randomData.add(new tableModData(LocalDate.of(2017, Month.DECEMBER, 25), "mod3", 3.45));
-        return randomData;
-    }
-
-    public ObservableList<tableLoanData> getLoanTableData() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader( new File(dirString, "Loan.txt")));
-        String line;
-        String[] array;
-        ObservableList<tableLoanData> randomData = FXCollections.observableArrayList();
-
-        //loop data read from file
-        while((line = br.readLine()) != null){
-            array = line.split(";");
-            randomData.add(new tableLoanData(LocalDate.parse(array[0]), array[1], Double.parseDouble(array[2])));
-        }
-        //randomData.add(new tableLoanData(LocalDate.of(2017, Month.DECEMBER, 23), "Loan1", 4.95)); //date, description, price
-        //randomData.add(new tableLoanData(LocalDate.of(2017, Month.DECEMBER, 24), "Loan2", 4.96));
-        //randomData.add(new tableLoanData(LocalDate.of(2017, Month.DECEMBER, 25), "Loan3", 4.97));
-        return randomData;
-    }
-
-
-    //
-    // total calculation modules
-    //
-    public String getExpenseSum(TableColumn<tableExpenseData, Double> expenseCost){
-        double result = 0;
-        List<String> columnData = new ArrayList<>();
-        for (tableExpenseData item : expenseTable.getItems()){
-            result += item.getCost();
-        }
-        return String.valueOf(df.format(result));
-    }
-
-    public String getMaintSum(TableColumn<tableMaintData, Double> maintCost){
-        double result = 0;
-        List<String> columnData = new ArrayList<>();
-        for (tableMaintData item : maintTable.getItems()){
-            result += item.getCost();
-        }
-        return String.valueOf(df.format(result));
-    }
-
-    public String getModSum(TableColumn<tableModData, Double> modCost){
-        double result = 0;
-        List<String> columnData = new ArrayList<>();
-        for (tableModData item : modTable.getItems()){
-            result += item.getCost();
-        }
-        return String.valueOf(df.format(result));
-    }
-
-    public String getLoanSum(TableColumn<tableLoanData, Double> loanCost){
-        double result = 0;
-        List<String> columnData = new ArrayList<>();
-        for (tableLoanData item : loanTable.getItems()){
-            result += item.getCost();
-        }
-        return String.valueOf(df.format(result));
     }
 
 
@@ -488,10 +369,10 @@ public class carController implements Initializable {
         }
         //save data when pressing Ok
         else if(result.get() == ButtonType.OK){
-            saveExpenseFile(expenseTable.getItems(), dirString + "\\Expense.txt");
-            saveMaintFile(maintTable.getItems(), dirString + "\\Maintenance.txt");
-            saveModFile(modTable.getItems(), dirString + "\\Mods.txt");
-            saveLoanFile(loanTable.getItems(), dirString + "\\Loan.txt");
+            FileSource.saveFile(expenseTable.getItems(), dirString + "\\Expense.txt");
+            FileSource.saveFile(maintTable.getItems(), dirString + "\\Maintenance.txt");
+            FileSource.saveFile(modTable.getItems(), dirString + "\\Mods.txt");
+            FileSource.saveFile(loanTable.getItems(), dirString + "\\Loan.txt");
             System.out.println("Data Saved");
         }
         //cancelled save data
@@ -501,69 +382,11 @@ public class carController implements Initializable {
 
     }
 
-    public void saveExpenseFile(ObservableList<tableExpenseData> observableList, String file){
-        try {
-            BufferedWriter outWriter = new BufferedWriter(new FileWriter(file));
-            for (tableExpenseData saveData : observableList){
-                outWriter.write(saveData.toString());
-                outWriter.newLine();
-            }
-            System.out.println(observableList);
-            outWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveMaintFile(ObservableList<tableMaintData> observableList, String file){
-        try {
-            BufferedWriter outWriter = new BufferedWriter(new FileWriter(file));
-            for (tableMaintData saveData : observableList){
-                outWriter.write(saveData.toString());
-                outWriter.newLine();
-            }
-            System.out.println(observableList);
-            outWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveModFile(ObservableList<tableModData> observableList, String file){
-        try {
-            BufferedWriter outWriter = new BufferedWriter(new FileWriter(file));
-            for (tableModData saveData : observableList){
-                outWriter.write(saveData.toString());
-                outWriter.newLine();
-            }
-            System.out.println(observableList);
-            outWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveLoanFile(ObservableList<tableLoanData> observableList, String file){
-        try {
-            BufferedWriter outWriter = new BufferedWriter(new FileWriter(file));
-            for (tableLoanData saveData : observableList){
-                outWriter.write(saveData.toString());
-                outWriter.newLine();
-            }
-            System.out.println(observableList);
-            outWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     //exit command
     public void closeApp(ActionEvent event){
         Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION, "confirm", ButtonType.OK, ButtonType.CANCEL);
-        //Stage stage = (Stage) fileMenu.getScene().getWindow();
         exitAlert.setContentText("Exit?");
         exitAlert.initModality(Modality.APPLICATION_MODAL);
-        //exitAlert.initOwner(stage);
         exitAlert.showAndWait();
         if(exitAlert.getResult() == ButtonType.OK){
             Platform.exit();
