@@ -1,10 +1,10 @@
 package com.example.finalprojectscenever2;
 
-import com.example.finalprojectscenever2.model.*;
+import com.example.finalprojectscenever2.model.FileSource;
+import com.example.finalprojectscenever2.model.tableExpenseData;
 import com.example.finalprojectscenever2.view.confirmBox;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,13 +12,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Formatter;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class carController implements Initializable {
@@ -88,9 +91,9 @@ public class carController implements Initializable {
         //
         //Expense Data
         //
-        expenseDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
-        expenseDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
-        expenseCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
+        expenseDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        expenseDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        expenseCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         //Use for button removal for maintenance table
         expenseTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -113,9 +116,9 @@ public class carController implements Initializable {
         //
         //Maintenance data
         //
-        maintDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
-        maintDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
-        maintCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
+        maintDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        maintDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        maintCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         //Use for button removal for maintenance table
         maintTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -137,9 +140,9 @@ public class carController implements Initializable {
         //
         //Mod Data
         //
-        modDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
-        modDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
-        modCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
+        modDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        modDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        modCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         //Use for button removal for maintenance table
         modTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -161,9 +164,9 @@ public class carController implements Initializable {
         //
         //Loan Data
         //
-        loanDate.setCellValueFactory(new PropertyValueFactory<tableExpenseData, LocalDate>("date"));
-        loanDescription.setCellValueFactory(new PropertyValueFactory<tableExpenseData, String>("description"));
-        loanCost.setCellValueFactory(new PropertyValueFactory<tableExpenseData, Double>("cost"));
+        loanDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        loanDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        loanCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         //Use for button removal for maintenance table
         loanTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -232,7 +235,7 @@ public class carController implements Initializable {
     //
     public void deleteExpenseButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
-        if(x == true) {
+        if(x) {
             ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = expenseTable.getItems();
 
@@ -241,12 +244,12 @@ public class carController implements Initializable {
             for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
-        }else{}
+        }
     }
 
     public void deleteMaintButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
-        if(x == true) {
+        if(x) {
             ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = maintTable.getItems();
 
@@ -255,13 +258,13 @@ public class carController implements Initializable {
             for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
-        }else{}
+        }
 
     }
 
     public void deleteModButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
-        if(x == true) {
+        if(x) {
             ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = modTable.getItems();
 
@@ -270,12 +273,12 @@ public class carController implements Initializable {
             for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
-        }else{}
+        }
     }
 
     public void deleteLoanButtonPushed() {
         boolean x = confirmBox.display("Delete Data", "Are you sure?");
-        if(x == true) {
+        if(x) {
             ObservableList<tableExpenseData> selectedRows, allItems;
             allItems = loanTable.getItems();
 
@@ -284,7 +287,7 @@ public class carController implements Initializable {
             for (tableExpenseData items : selectedRows) {
                 allItems.remove(items);
             }
-        }else{}
+        }
     }
 
     //
@@ -331,6 +334,7 @@ public class carController implements Initializable {
                 addLoanDescription.getText(),
                 parseCost
         );
+
         loanTable.getItems().add(newData);
     }
 
@@ -355,7 +359,7 @@ public class carController implements Initializable {
     //
     // save modules
     //
-    public void saveMenuSelected (ActionEvent event) throws IOException {
+    public void saveMenuSelected() {
         //set alert box to confirm save data
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Data Save Files");
@@ -363,7 +367,7 @@ public class carController implements Initializable {
         alert.setContentText("Save Data?");
         Optional<ButtonType> result = alert.showAndWait();
 
-        if(!result.isPresent()){
+        if(result.isEmpty()){
             //alert exit, no button pressed
             System.out.println("Exit Save");
         }
@@ -383,7 +387,7 @@ public class carController implements Initializable {
     }
 
     //exit command
-    public void closeApp(ActionEvent event){
+    public void closeApp(){
         Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION, "confirm", ButtonType.OK, ButtonType.CANCEL);
         exitAlert.setContentText("Exit?");
         exitAlert.initModality(Modality.APPLICATION_MODAL);

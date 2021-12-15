@@ -37,8 +37,9 @@ public class confirmBox {
         });
 
 
+
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, yesButton, noButton);
+        layout.getChildren().addAll(label, yesButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
@@ -47,4 +48,33 @@ public class confirmBox {
 
         return answer;
     }
+
+        public static void error(String title, String message) {
+            Stage window = new Stage();
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.setTitle(title);
+            window.setMinWidth(150);
+            window.setMinHeight(150);
+            Label label = new Label();
+            label.setText(message);
+
+            //create two buttons
+            Button yesButton = new Button("Ok");
+
+            yesButton.setOnAction(e -> {
+                answer = true;
+                window.close();
+            });
+
+            VBox layout = new VBox(10);
+            layout.getChildren().addAll(label, yesButton);
+            layout.setAlignment(Pos.CENTER);
+
+            Scene scene = new Scene(layout);
+            window.setScene(scene);
+            window.showAndWait();
+
+        }
+
+
 }

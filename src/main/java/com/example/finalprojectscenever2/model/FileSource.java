@@ -29,6 +29,7 @@ public class FileSource {
             array = line.split(";");
             randomData.add(new tableExpenseData(LocalDate.parse(array[0]), array[1], Double.parseDouble(array[2])));
         }
+
         //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 23), "expense1", 1.33)); //date, description, price
         //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 24), "expense2", 1.24));
         //randomData.add(new tableExpenseData(LocalDate.of(2017, Month.DECEMBER, 25), "expense3", 1.56));

@@ -1,13 +1,13 @@
 package com.example.finalprojectscenever2.model;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 
 public class tableExpenseData {
-
+    DecimalFormat df = new DecimalFormat("###.##");
 
     private LocalDate date;
     private SimpleStringProperty description;
@@ -40,9 +40,7 @@ public class tableExpenseData {
         this.description.set(description);
     }
 
-    public double getCost() {
-        return cost;
-    }
+    public double getCost() {return Double.parseDouble(df.format(cost));}
 
     public void setCost(double cost) {
         this.cost = cost;
